@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Analytics - ' + ${url.shortCode})}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container animate-fade-in">
+    <div class="mb-4">
+        <a th:href="@{/dashboard}" class="btn btn-outline-secondary rounded-pill"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="glass-card p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-2 text-primary" th:text="'/' + ${url.shortCode}"></h2>
+                        <a th:href="${url.originalUrl}" target="_blank" class="text-muted text-break text-decoration-none"><i class="bi bi-link-45deg"></i> <span th:text="${url.originalUrl}"></span></a>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <div class="badge bg-primary p-3 rounded-pill fs-5">
+                            <i class="bi bi-bar-chart-fill me-2"></i><span th:text="${url.clickCount}"></span> Clicks
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Row -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h5 class="mb-4">Click History (Last 30 Days)</h5>
+                <canvas id="clicksChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Detailed Logs -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="glass-card p-4">
+                <h5 class="mb-4">Recent Click Events</h5>
+                <div class="table-responsive">
+                    <table class="table table-sm table-custom">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Referrer</th>
+                                <th>User Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="click : ${clicks}">
+                                <td th:text="${#temporals.format(click.clickedAt, 'dd MMM yyyy HH:mm:ss')}"></td>
+                                <td class="text-truncate" style="max-width: 200px;" th:text="${click.referrer}"></td>
+                                <td class="text-truncate" style="max-width: 300px;" th:text="${click.userAgent}"></td>
+                            </tr>
+                            <tr th:if="${clicks.empty}">
+                                <td colspan="3" class="text-center py-3 text-muted">No clicks recorded yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener("DOMContentLoaded", function() {
+        const clicksData = /*[[${clicks}]]*/ [];
+        
+        if (clicksData.length > 0) {
+            // Group by date
+            const clickCounts = {};
+            
+            // Initialize last 7 days with 0
+            for(let i=6; i>=0; i--) {
+                const d = new Date();
+                d.setDate(d.getDate() - i);
+                const dateStr = d.toISOString().split('T')[0];
+                clickCounts[dateStr] = 0;
+            }
+
+            // Populate data
+            clicksData.forEach(c => {
+                const dateStr = c.clickedAt.split('T')[0];
+                if(clickCounts[dateStr] !== undefined) {
+                    clickCounts[dateStr]++;
+                }
+            });
+
+            const labels = Object.keys(clickCounts);
+            const data = Object.values(clickCounts);
+
+            const ctx = document.getElementById('clicksChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Clicks per day',
+                        data: data,
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#4f46e5',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#4f46e5',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

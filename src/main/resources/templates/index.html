@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Welcome')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container flex-grow-1 d-flex align-items-center justify-content-center">
+    <div class="row w-100 animate-fade-in">
+        
+        <div class="col-lg-6 d-flex flex-column justify-content-center mb-5 mb-lg-0">
+            <h1 class="display-4 fw-bolder mb-3" style="background: linear-gradient(to right, #4f46e5, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Shorten Your Links. <br>Expand Your Reach.</h1>
+            <p class="lead text-muted mb-4">Shortify is a powerful, production-ready URL shortener with built-in analytics to track your clicks in real-time.</p>
+            <div class="d-flex gap-3">
+                <a href="#registerForm" class="btn btn-primary-custom btn-lg px-4 rounded-pill">Get Started</a>
+                <a href="#loginForm" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">Login</a>
+            </div>
+        </div>
+        
+        <div class="col-lg-5 offset-lg-1">
+            <div class="glass-card p-4 p-md-5">
+                
+                <div th:if="${param.error}" class="alert alert-danger">
+                    Invalid username and password.
+                </div>
+                <div th:if="${param.logout}" class="alert alert-success">
+                    You have been logged out.
+                </div>
+                <div th:if="${param.success}" class="alert alert-success">
+                    Registration successful! Please login.
+                </div>
+                <div th:if="${registrationError}" class="alert alert-danger" th:text="${registrationError}"></div>
+                
+                <!-- Navigation Tabs -->
+                <ul class="nav nav-pills mb-4 nav-justified" id="authTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Login</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Register</button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content" id="authTabContent">
+                    <!-- Login Form -->
+                    <div class="tab-pane fade show active" id="login" role="tabpanel" tabindex="0">
+                        <form id="loginForm" th:action="@{/login}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Email address</label>
+                                <input type="email" class="form-control form-control-lg bg-light" id="username" name="username" required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg bg-light" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom btn-lg w-100 rounded-pill">Login</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Register Form -->
+                    <div class="tab-pane fade" id="register" role="tabpanel" tabindex="0">
+                        <form id="registerForm" th:action="@{/register}" th:object="${userDto}" method="post">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Full Name</label>
+                                <input type="text" class="form-control form-control-lg bg-light" th:field="*{name}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="regEmail" class="form-label">Email address</label>
+                                <input type="email" class="form-control form-control-lg bg-light" id="regEmail" th:field="*{email}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="regPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg bg-light" id="regPassword" th:field="*{password}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+                            <button type="submit" class="btn btn-primary-custom btn-lg w-100 rounded-pill">Create Account</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

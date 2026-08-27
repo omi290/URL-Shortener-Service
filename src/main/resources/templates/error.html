@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Oops!')}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<div class="container flex-grow-1 d-flex align-items-center justify-content-center animate-fade-in">
+    <div class="glass-card p-5 text-center" style="max-width: 500px;">
+        <h1 class="display-1 text-danger fw-bolder mb-3"><i class="bi bi-exclamation-triangle"></i></h1>
+        <h2 class="mb-3">Oops! Something went wrong.</h2>
+        <p class="lead text-muted mb-4" th:text="${error} ?: 'The URL you are looking for does not exist, is inactive, or has expired.'"></p>
+        <a th:href="@{/}" class="btn btn-primary-custom btn-lg rounded-pill px-4">Go to Home</a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

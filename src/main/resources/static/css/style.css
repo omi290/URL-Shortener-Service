@@ -1,0 +1,87 @@
+/* Modern UI Aesthetics */
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    transition: background-color 0.3s ease;
+}
+
+/* Glassmorphism Card */
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+    color: white;
+}
+
+.table-custom {
+    background: var(--card-bg);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.table-custom th {
+    background-color: #f9fafb;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.table-custom td {
+    vertical-align: middle;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Micro-animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    background: linear-gradient(to right, #4f46e5, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
