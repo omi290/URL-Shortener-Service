@@ -35,5 +35,6 @@ public class User {
     
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Builder.Default
     private List<ShortUrl> urls = new ArrayList<>();
 }

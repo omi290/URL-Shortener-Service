@@ -49,5 +49,6 @@ public class ShortUrl {
 
     @OneToMany(mappedBy = "shortUrl", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
+    @Builder.Default
     private List<ClickEvent> clickEvents = new ArrayList<>();
 }

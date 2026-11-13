@@ -23,8 +23,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**", "/h2-console/**"))
+            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/api/auth/**").permitAll()
+                .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/api/auth/**", "/h2-console/**").permitAll()
                 .requestMatchers("/{shortCode:[a-zA-Z0-9]+}").permitAll() // Allow redirection
                 .anyRequest().authenticated()
             )
@@ -39,11 +41,7 @@ public class SecurityConfig {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .permitAll()
-            )
-            // Enable CSRF, but we might need to disable it for external API clients if needed later. 
-            // Keeping it default (enabled) for standard web apps.
-            // .csrf(csrf -> csrf.disable()) // Uncomment if you want purely stateless APIs testing from Postman
-            ;
+            );
 
         return http.build();
     }
